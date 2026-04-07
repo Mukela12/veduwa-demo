@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 import uuid
 
 from sqlalchemy import CheckConstraint, DateTime, ForeignKey, String, Text, func, text
@@ -17,7 +18,7 @@ class Screening(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     application_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("applications.id"), nullable=False, index=True)
     messages: Mapped[list[dict]] = mapped_column(JSONB, nullable=False, server_default=text("'[]'::jsonb"), default=list)
-    summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     outcome: Mapped[str] = mapped_column(String(20), nullable=False, server_default="pending", default="pending", index=True)
     started_at = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     completed_at = mapped_column(DateTime(timezone=True), nullable=True)

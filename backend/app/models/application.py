@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 import uuid
 
 from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Float, String, UniqueConstraint, func
@@ -18,8 +19,8 @@ class Application(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     job_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("jobs.id"), nullable=False, index=True)
     candidate_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("candidates.id"), nullable=False, index=True)
-    match_score: Mapped[float | None] = mapped_column(Float, nullable=True)
-    skills_overlap: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    match_score: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    skills_overlap: Mapped[Optional[dict]] = mapped_column(JSONB, nullable=True)
     status: Mapped[str] = mapped_column(String(20), nullable=False, server_default="pending", default="pending", index=True)
     created_at = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
