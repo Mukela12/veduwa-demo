@@ -43,6 +43,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   const [activeStepIndex, setActiveStepIndex] = useState(0)
   const [filteredSteps, setFilteredSteps] = useState<OnboardingStep[]>([])
   const [showOptIn, setShowOptIn] = useState(false)
+  const [pendingStart, setPendingStart] = useState<{ pageKey: string; ctx: StepContext } | null>(null)
 
   useEffect(() => {
     // Show opt-in prompt for new users after a short delay
@@ -60,16 +61,7 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     })
   }, [])
 
-  const optIn = useCallback((value: boolean) => {
-    updateState({ optedIn: value })
-    setShowOptIn(false)
-  }, [updateState])
-
-  const startPage = useCallback((pageKey: string, ctx: StepContext) => {
-    if (!state.optedIn || !state.tutorialEnabled) return
-    if (state.completedPages[pageKey]) return
-    if (activePageKey) return // another tutorial is running
-
+  const beginTutorial = useCallback((pageKey: string, ctx: StepContext) => {
     const steps = stepRegistry[pageKey]
     if (!steps) return
 
@@ -79,7 +71,32 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
     setFilteredSteps(filtered)
     setActivePageKey(pageKey)
     setActiveStepIndex(0)
-  }, [state, activePageKey])
+  }, [])
+
+  const optIn = useCallback((value: boolean) => {
+    updateState({ optedIn: value })
+    setShowOptIn(false)
+    // If user opted in and there's a pending page, start it immediately
+    if (value && pendingStart) {
+      setTimeout(() => {
+        beginTutorial(pendingStart.pageKey, pendingStart.ctx)
+        setPendingStart(null)
+      }, 600)
+    }
+  }, [updateState, pendingStart, beginTutorial])
+
+  const startPage = useCallback((pageKey: string, ctx: StepContext) => {
+    // If opt-in hasn't been answered yet, queue this for after opt-in
+    if (state.optedIn === null) {
+      setPendingStart({ pageKey, ctx })
+      return
+    }
+    if (!state.optedIn || !state.tutorialEnabled) return
+    if (state.completedPages[pageKey]) return
+    if (activePageKey) return // another tutorial is running
+
+    beginTutorial(pageKey, ctx)
+  }, [state, activePageKey, beginTutorial])
 
   const advanceStep = useCallback(() => {
     if (activeStepIndex < filteredSteps.length - 1) {
