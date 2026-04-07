@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: veduwa-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    rootDir: backend
+    region: ohio
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: DEMO_AUTH
+        value: "true"
+      - key: LOCAL_EMBEDDINGS_ENABLED
+        value: "false"
+      - key: PORT
+        value: "8000"
