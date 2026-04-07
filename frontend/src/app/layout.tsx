@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "sonner";
@@ -36,12 +37,14 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        <ThemeProvider>
-          <AuthProvider>
-            {children}
-            <Toaster position="bottom-right" richColors />
-          </AuthProvider>
-        </ThemeProvider>
+        <ClerkProvider>
+          <ThemeProvider>
+            <AuthProvider>
+              {children}
+              <Toaster position="bottom-right" richColors />
+            </AuthProvider>
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

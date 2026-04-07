@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/auth/auth-provider'
+import { useClerk } from '@clerk/nextjs'
 import VeduwaLogo from '@/components/ui/veduwa-logo'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { Mail, Lock, AlertCircle, Briefcase, Search } from 'lucide-react'
@@ -35,8 +36,17 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const { signIn, signInWithGoogle } = useAuth()
+  const { signIn } = useAuth()
+  const clerk = useClerk()
   const router = useRouter()
+
+  const handleGoogleSignIn = () => {
+    try {
+      clerk.redirectToSignIn()
+    } catch {
+      setError('Google sign-in not available. Try email login.')
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -118,7 +128,7 @@ export default function LoginPage() {
 
             {/* Google OAuth */}
             <button
-              onClick={() => signInWithGoogle()}
+              onClick={handleGoogleSignIn}
               className="w-full btn btn--secondary py-2.5"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
