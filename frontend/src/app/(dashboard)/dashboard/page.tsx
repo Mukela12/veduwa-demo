@@ -40,8 +40,8 @@ export default function DashboardPage() {
       .then(([nextStats, nextJobs, nextCandidates, nextPipeline]) => {
         if (!active) return
         setStats(nextStats)
-        setJobs(nextJobs.length ? nextJobs : mockJobs)
-        setCandidates(nextCandidates.length ? nextCandidates : mockCandidates)
+        setJobs(nextJobs)
+        setCandidates(nextCandidates)
         setPipelineData(nextPipeline.length ? nextPipeline : fallbackPipelineData)
         setSource('api')
       })

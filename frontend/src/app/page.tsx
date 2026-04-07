@@ -8,8 +8,10 @@ import LordIcon from '@/components/ui/lord-icon'
 import VeduwaLogo from '@/components/ui/veduwa-logo'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { AnimatedTooltip } from '@/components/ui/animated-tooltip'
+import { ContainerScroll } from '@/components/ui/container-scroll'
+import { OrbitingCircles } from '@/components/ui/orbiting-circles'
 import { TextShimmer } from '@/components/ui/text-shimmer'
-import { ArrowRight, Users, BarChart3, MessageSquare, FileSearch, Brain, Target, Zap, Shield, Globe, Code2 } from 'lucide-react'
+import { ArrowRight, Users, BarChart3, MessageSquare, FileSearch, Brain, Target } from 'lucide-react'
 
 const fadeUp = { initial: { opacity: 0, y: 24 }, animate: { opacity: 1, y: 0 } }
 const stagger = { animate: { transition: { staggerChildren: 0.12 } } }
@@ -55,14 +57,7 @@ const features = [
   { icon: <Users className="w-5 h-5" />, title: 'Rich Profiles', desc: 'Skill proficiency bars, screening history, AI summaries, and document management — all in one view.' },
 ]
 
-const techStack = [
-  { name: 'Next.js', icon: <Code2 className="w-4 h-4" /> },
-  { name: 'FastAPI', icon: <Zap className="w-4 h-4" /> },
-  { name: 'PostgreSQL', icon: <Shield className="w-4 h-4" /> },
-  { name: 'Claude AI', icon: <Brain className="w-4 h-4" /> },
-  { name: 'Supabase', icon: <Globe className="w-4 h-4" /> },
-  { name: 'Redis', icon: <Zap className="w-4 h-4" /> },
-]
+// techStack used in OrbitingCircles section directly
 
 export default function LandingPage() {
   const heroRef = useRef<HTMLDivElement>(null)
@@ -318,21 +313,63 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Tech Stack ── */}
-      <section className="py-14 px-6 border-y border-border">
+      {/* ── Dashboard Preview (ContainerScroll) ── */}
+      <section className="py-0 px-6 bg-background relative overflow-hidden">
+        <ContainerScroll
+          titleComponent={
+            <div className="mb-6">
+              <span className="text-[11px] font-semibold uppercase tracking-[3px] text-primary mb-3 block">Live Preview</span>
+              <h2 className="text-[28px] md:text-[36px] font-heading font-bold tracking-tight text-foreground">
+                See the dashboard in action
+              </h2>
+              <p className="text-[14px] text-secondary mt-2 max-w-[460px] mx-auto">
+                Real-time stats, pipeline analytics, and AI-powered candidate matching — all in one view.
+              </p>
+            </div>
+          }
+        >
+          <Image
+            src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&h=900&fit=crop"
+            alt="Veduwa Dashboard"
+            width={1400}
+            height={900}
+            className="w-full h-full object-cover object-left-top"
+          />
+        </ContainerScroll>
+      </section>
+
+      {/* ── Tech Stack with Orbiting Circles ── */}
+      <section className="py-20 px-6 border-y border-border relative overflow-hidden">
         <div className="max-w-[900px] mx-auto">
-          <p className="text-[11px] font-semibold uppercase tracking-[3px] text-muted-foreground text-center mb-8">Powered By</p>
-          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
-            {techStack.map((tech) => (
-              <motion.div
-                key={tech.name}
-                whileHover={{ scale: 1.05, y: -2 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-transparent hover:border-border hover:bg-surface-hover transition-all cursor-default"
-              >
-                <span className="text-muted-foreground">{tech.icon}</span>
-                <span className="text-[13px] font-mono font-medium text-foreground">{tech.name}</span>
-              </motion.div>
-            ))}
+          <p className="text-[11px] font-semibold uppercase tracking-[3px] text-muted-foreground text-center mb-4">Powered By</p>
+          <h3 className="text-[22px] font-heading font-bold text-center text-foreground mb-12">Modern, production-ready stack</h3>
+
+          <div className="relative flex h-[360px] w-full items-center justify-center overflow-hidden">
+            <span className="pointer-events-none text-center text-[14px] font-heading font-bold text-foreground whitespace-pre-wrap leading-tight">
+              AI-Powered<br />Hiring
+            </span>
+
+            {/* Inner orbit */}
+            <OrbitingCircles className="size-[36px] border-none bg-transparent" duration={20} delay={0} radius={80}>
+              <div className="flex items-center justify-center w-full h-full text-[10px] font-mono font-bold text-primary">Next.js</div>
+            </OrbitingCircles>
+            <OrbitingCircles className="size-[36px] border-none bg-transparent" duration={20} delay={10} radius={80}>
+              <div className="flex items-center justify-center w-full h-full text-[10px] font-mono font-bold text-accent">FastAPI</div>
+            </OrbitingCircles>
+
+            {/* Outer orbit */}
+            <OrbitingCircles className="size-[40px] border-none bg-transparent" duration={30} delay={0} radius={160} reverse>
+              <div className="flex items-center justify-center w-full h-full text-[10px] font-mono font-bold text-success">Supabase</div>
+            </OrbitingCircles>
+            <OrbitingCircles className="size-[40px] border-none bg-transparent" duration={30} delay={7.5} radius={160} reverse>
+              <div className="flex items-center justify-center w-full h-full text-[10px] font-mono font-bold text-warning">Claude</div>
+            </OrbitingCircles>
+            <OrbitingCircles className="size-[40px] border-none bg-transparent" duration={30} delay={15} radius={160} reverse>
+              <div className="flex items-center justify-center w-full h-full text-[10px] font-mono font-bold text-error">Redis</div>
+            </OrbitingCircles>
+            <OrbitingCircles className="size-[40px] border-none bg-transparent" duration={30} delay={22.5} radius={160} reverse>
+              <div className="flex items-center justify-center w-full h-full text-[10px] font-mono font-bold text-primary">PG</div>
+            </OrbitingCircles>
           </div>
         </div>
       </section>

@@ -19,6 +19,7 @@ export default function SignUpPage() {
   const [role, setRole] = useState<'employer' | 'candidate'>('employer')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
   const { signUp, signInWithGoogle } = useAuth()
   const router = useRouter()
 
@@ -27,9 +28,12 @@ export default function SignUpPage() {
     setError('')
     setLoading(true)
 
-    const { error } = await signUp(email, password, fullName, role)
+    const { error, needsConfirmation } = await signUp(email, password, fullName, role)
     if (error) {
       setError(error.message)
+      setLoading(false)
+    } else if (needsConfirmation) {
+      setEmailSent(true)
       setLoading(false)
     } else {
       router.push('/dashboard')
@@ -56,6 +60,31 @@ export default function SignUpPage() {
 
         <div className="flex-1 flex items-center justify-center px-6 pb-12">
           <div className="w-full max-w-[420px] page-enter">
+            {emailSent ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 rounded-2xl bg-success-bg mx-auto flex items-center justify-center mb-6">
+                  <Mail className="w-8 h-8 text-success" />
+                </div>
+                <h1 className="text-[24px] font-heading font-bold tracking-tight text-foreground">
+                  Check your email
+                </h1>
+                <p className="text-[14px] text-secondary mt-3 max-w-[320px] mx-auto leading-relaxed">
+                  We sent a confirmation link to <strong className="text-foreground">{email}</strong>. Click the link to verify your account and start using Veduwa.
+                </p>
+                <div className="mt-8 space-y-3">
+                  <Link href="/auth/login" className="btn btn--primary w-full py-2.5">
+                    Back to Sign In
+                  </Link>
+                  <button
+                    onClick={() => setEmailSent(false)}
+                    className="text-[12px] text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Didn&apos;t receive it? Try again
+                  </button>
+                </div>
+              </div>
+            ) : (
+            <>
             <div className="text-center mb-8">
               <div className="hidden lg:block">
                 <VeduwaLogo size="lg" className="justify-center mb-4" />
@@ -158,6 +187,8 @@ export default function SignUpPage() {
                 Sign in
               </Link>
             </p>
+            </>
+            )}
           </div>
         </div>
       </div>

@@ -22,7 +22,7 @@ export default function CandidatesPage() {
     fetchCandidates()
       .then((data) => {
         if (!active) return
-        setCandidates(data.length ? data : mockCandidates)
+        setCandidates(data)
         setSource(data.length ? 'api' : 'mock')
       })
       .catch(() => {

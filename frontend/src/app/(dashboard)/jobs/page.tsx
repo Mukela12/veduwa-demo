@@ -26,7 +26,7 @@ export default function JobBoardPage() {
     fetchJobs()
       .then((data) => {
         if (!active) return
-        setJobs(data.length ? data : mockJobs)
+        setJobs(data)
         setSource(data.length ? 'api' : 'mock')
       })
       .catch(() => {
