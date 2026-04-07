@@ -26,23 +26,23 @@ export default function AnimationPanel() {
         <VeduwaLogo size="md" className="[&_span]:text-white [&_div]:bg-white/20" />
 
         <div className="max-w-[320px]">
-          <h2 className="text-[24px] font-heading font-bold text-white tracking-tight leading-tight">
+          <h2 className="text-[26px] font-heading font-bold text-white tracking-tight leading-tight" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.5)' }}>
             AI-Powered
             <br />
             Talent Matching
           </h2>
-          <p className="text-[13px] text-white/60 mt-3 leading-relaxed">
+          <p className="text-[13px] text-white/90 mt-3 leading-relaxed" style={{ textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>
             Vector embeddings, cosine similarity, and Claude AI screening — all working together to find your perfect hire.
           </p>
           <div className="flex items-center gap-3 mt-6">
             <div className="flex -space-x-1.5">
               {['SC', 'MJ', 'ER'].map((initials) => (
-                <div key={initials} className="w-7 h-7 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[9px] font-bold text-white/80">
+                <div key={initials} className="w-7 h-7 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-[9px] font-bold text-white" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
                   {initials}
                 </div>
               ))}
             </div>
-            <p className="text-[11px] text-white/50">500+ companies trust Veduwa</p>
+            <p className="text-[11px] text-white/80" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>500+ companies trust Veduwa</p>
           </div>
         </div>
       </div>
