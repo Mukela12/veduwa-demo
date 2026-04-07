@@ -37,3 +37,6 @@ npm-debug.log*
 .lint-relative-paths-results.txt
 .lychee-results.json
 frontend/.env.vercel
+temp_auto_push.bat
+temp_interactive_push.bat
+branch_structure.json
