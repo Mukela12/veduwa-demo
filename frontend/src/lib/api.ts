@@ -142,26 +142,41 @@ export function toJob(job: BackendJob): Job {
   }
 }
 
-// Stable avatar URLs keyed by name so they persist across mock/API transitions
-const AVATAR_POOL = [
-  'https://randomuser.me/api/portraits/women/44.jpg',
-  'https://randomuser.me/api/portraits/men/32.jpg',
-  'https://randomuser.me/api/portraits/women/68.jpg',
-  'https://randomuser.me/api/portraits/men/75.jpg',
-  'https://randomuser.me/api/portraits/women/26.jpg',
-  'https://randomuser.me/api/portraits/men/22.jpg',
-  'https://randomuser.me/api/portraits/women/90.jpg',
-  'https://randomuser.me/api/portraits/men/46.jpg',
+// Explicit name-to-avatar map for seeded candidates (gender-matched)
+const AVATAR_MAP: Record<string, string> = {
+  'Sarah Chen': 'https://randomuser.me/api/portraits/women/44.jpg',
+  'Marcus Johnson': 'https://randomuser.me/api/portraits/men/32.jpg',
+  'Elena Rodriguez': 'https://randomuser.me/api/portraits/women/68.jpg',
+  'David Kim': 'https://randomuser.me/api/portraits/men/75.jpg',
+  'Aisha Patel': 'https://randomuser.me/api/portraits/women/26.jpg',
+  'James Wright': 'https://randomuser.me/api/portraits/men/22.jpg',
+  'Lisa Nakamura': 'https://randomuser.me/api/portraits/women/90.jpg',
+  'Omar Hassan': 'https://randomuser.me/api/portraits/men/46.jpg',
+}
+
+// Fallback pools by first-name gender heuristic
+const WOMEN_AVATARS = [
   'https://randomuser.me/api/portraits/women/55.jpg',
-  'https://randomuser.me/api/portraits/men/67.jpg',
   'https://randomuser.me/api/portraits/women/33.jpg',
+  'https://randomuser.me/api/portraits/women/12.jpg',
+  'https://randomuser.me/api/portraits/women/79.jpg',
+]
+const MEN_AVATARS = [
+  'https://randomuser.me/api/portraits/men/67.jpg',
   'https://randomuser.me/api/portraits/men/85.jpg',
+  'https://randomuser.me/api/portraits/men/11.jpg',
+  'https://randomuser.me/api/portraits/men/53.jpg',
 ]
 
 function stableAvatarUrl(name: string): string {
+  // Check explicit map first
+  if (AVATAR_MAP[name]) return AVATAR_MAP[name]
+
+  // For unknown names, pick a stable avatar from the appropriate pool
   let hash = 0
   for (let i = 0; i < name.length; i++) hash = ((hash << 5) - hash + name.charCodeAt(i)) | 0
-  return AVATAR_POOL[Math.abs(hash) % AVATAR_POOL.length]
+  const pool = Math.abs(hash) % 2 === 0 ? WOMEN_AVATARS : MEN_AVATARS
+  return pool[Math.abs(hash) % pool.length]
 }
 
 export function toCandidate(candidate: BackendCandidate): Candidate {
