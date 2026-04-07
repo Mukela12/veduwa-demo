@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { Search, SlidersHorizontal, X } from 'lucide-react'
 import { fetchJobs } from '@/lib/api'
 import type { Job } from '@/lib/mock-data'
+import { usePageOnboarding } from '@/onboarding/use-page-onboarding'
 
 const jobTypes = ['All', 'Full-time', 'Contract', 'Remote']
 const seniorityLevels = ['All', 'Junior', 'Mid', 'Senior', 'Lead']
@@ -53,10 +54,18 @@ export default function JobBoardPage() {
     )
   }
 
+  usePageOnboarding('jobs', {
+    hasJobs: jobs.length > 0,
+    jobCount: jobs.length,
+    hasCandidates: false,
+    candidateCount: 0,
+    userRole: 'employer',
+  })
+
   return (
     <div className="space-y-6 max-w-[1200px]">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between" data-onboarding="jobs-header">
         <div>
           <h1 className="text-[22px] font-heading font-bold tracking-tight text-foreground">
             Job Board
@@ -76,7 +85,7 @@ export default function JobBoardPage() {
       </div>
 
       {/* Search */}
-      <div className="relative">
+      <div className="relative" data-onboarding="jobs-search">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <input
           type="text"
@@ -175,8 +184,10 @@ export default function JobBoardPage() {
 
         {/* Job cards grid */}
         <div className="flex-1 grid grid-cols-2 gap-4 content-start">
-          {filteredJobs.map((job) => (
-            <JobCard key={job.id} job={job} />
+          {filteredJobs.map((job, i) => (
+            <div key={job.id} {...(i === 0 ? { 'data-onboarding': 'jobs-card' } : {})}>
+              <JobCard job={job} />
+            </div>
           ))}
           {filteredJobs.length === 0 && (
             <div className="col-span-2 py-16 text-center">

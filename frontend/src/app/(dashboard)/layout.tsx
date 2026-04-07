@@ -6,6 +6,9 @@ import { useEffect } from 'react'
 import Sidebar from '@/components/layout/sidebar'
 import Header from '@/components/layout/header'
 import MobileDock from '@/components/layout/mobile-dock'
+import { OnboardingProvider } from '@/onboarding/context'
+import OptInPrompt from '@/components/ui/opt-in-prompt'
+import SpotlightOverlay from '@/components/ui/spotlight-overlay'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -31,15 +34,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!user) return null
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      <div className="flex-1 md:ml-[240px]">
-        <Header />
-        <main className="p-4 md:p-6 page-enter pb-24 md:pb-6">
-          {children}
-        </main>
+    <OnboardingProvider>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <div className="flex-1 md:ml-[240px]">
+          <Header />
+          <main className="p-4 md:p-6 page-enter pb-24 md:pb-6">
+            {children}
+          </main>
+        </div>
+        <MobileDock />
       </div>
-      <MobileDock />
-    </div>
+      <OptInPrompt />
+      <SpotlightOverlay />
+    </OnboardingProvider>
   )
 }

@@ -3,11 +3,20 @@
 import { useAuth } from '@/components/auth/auth-provider'
 import LordIcon from '@/components/ui/lord-icon'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { useOnboarding } from '@/onboarding/context'
+import { RotateCcw } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function SettingsPage() {
   const { user } = useAuth()
+  const { resetTutorial } = useOnboarding()
   const userName = user?.user_metadata?.full_name || 'Demo User'
   const userRole = user?.user_metadata?.role || 'employer'
+
+  const handleResetTutorial = () => {
+    resetTutorial()
+    toast.success('Tutorial reset! Navigate to the Dashboard to start the guided tour again.')
+  }
 
   return (
     <div className="max-w-[600px] space-y-6">
@@ -45,6 +54,23 @@ export default function SettingsPage() {
             <p className="text-[11px] text-muted-foreground">Toggle between light and dark mode</p>
           </div>
           <ThemeToggle />
+        </div>
+      </div>
+
+      <div className="clarity-card p-5 space-y-4">
+        <h2 className="text-[15px] font-semibold text-foreground">Onboarding</h2>
+        <div className="flex items-center justify-between py-2">
+          <div>
+            <p className="text-[13px] text-foreground">Guided Tour</p>
+            <p className="text-[11px] text-muted-foreground">Replay the feature walkthrough on every page</p>
+          </div>
+          <button
+            onClick={handleResetTutorial}
+            className="btn btn--secondary text-[12px] gap-1.5"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            Redo Tour
+          </button>
         </div>
       </div>
 

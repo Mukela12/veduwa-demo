@@ -10,6 +10,7 @@ import { ArrowRight, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { fetchCandidates, fetchDashboardStats, fetchJobs, fetchPipeline, type PipelineStage } from '@/lib/api'
 import type { Candidate, DashboardStats, Job } from '@/lib/mock-data'
+import { usePageOnboarding } from '@/onboarding/use-page-onboarding'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts'
@@ -58,10 +59,18 @@ export default function DashboardPage() {
     }
   }, [])
 
+  usePageOnboarding('dashboard', {
+    hasJobs: jobs.length > 0,
+    jobCount: jobs.length,
+    hasCandidates: candidates.length > 0,
+    candidateCount: candidates.length,
+    userRole: 'employer',
+  })
+
   return (
     <div className="space-y-6 max-w-[1200px]">
       {/* Welcome */}
-      <div>
+      <div data-onboarding="dashboard-header">
         <h1 className="text-[22px] font-heading font-bold tracking-tight text-foreground">
           Welcome back
         </h1>
@@ -72,7 +81,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-4 gap-4" data-onboarding="dashboard-stats">
         <StatCard
           label="Active Jobs"
           value={stats.activeJobs}
@@ -101,7 +110,7 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-3 gap-4">
         {/* Pipeline Chart */}
-        <div className="col-span-2 clarity-card p-5">
+        <div className="col-span-2 clarity-card p-5" data-onboarding="dashboard-pipeline">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-[15px] font-semibold text-foreground">Candidate Pipeline</h2>
@@ -138,7 +147,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="clarity-card p-5">
+        <div className="clarity-card p-5" data-onboarding="dashboard-actions">
           <h2 className="text-[15px] font-semibold text-foreground mb-4">Quick Actions</h2>
           <div className="space-y-2">
             <Link href="/dashboard/post" className="quick-action">
