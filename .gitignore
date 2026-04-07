@@ -34,3 +34,6 @@ npm-debug.log*
 
 # Claude
 .claude/
+.lint-relative-paths-results.txt
+.lychee-results.json
+frontend/.env.vercel

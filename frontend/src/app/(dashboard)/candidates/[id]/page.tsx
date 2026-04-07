@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { mockCandidates, mockJobs } from '@/lib/mock-data'
 import MatchScoreRing from '@/components/ui/match-score-ring'
 import LordIcon from '@/components/ui/lord-icon'
@@ -51,9 +52,13 @@ export default function CandidateDetailPage({ params }: { params: { id: string }
       <div className="clarity-card p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-primary-light text-primary flex items-center justify-center text-[24px] font-bold">
-              {candidate.avatar}
-            </div>
+            {candidate.avatarUrl ? (
+              <Image src={candidate.avatarUrl} alt={candidate.name} width={64} height={64} className="w-16 h-16 rounded-full object-cover" />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-primary-light text-primary flex items-center justify-center text-[24px] font-bold">
+                {candidate.avatar}
+              </div>
+            )}
             <div>
               <h1 className="text-[22px] font-heading font-bold tracking-tight text-foreground">
                 {candidate.name}

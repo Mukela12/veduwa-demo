@@ -396,6 +396,11 @@ body {
   filter: invert(55%) sepia(80%) saturate(1500%) hue-rotate(210deg) brightness(110%) contrast(90%);
 }
 
+/* All LordIcons: invert to white/light in dark mode */
+.dark .lordicon-auto {
+  filter: invert(1) brightness(0.85);
+}
+
 /* ── Shimmer text ── */
 .text-shimmer {
   background: linear-gradient(

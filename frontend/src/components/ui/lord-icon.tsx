@@ -52,7 +52,7 @@ export default function LordIcon({
 
   return (
     <div
-      className={`inline-flex shrink-0 ${className}`}
+      className={`inline-flex shrink-0 ${className.includes('lordicon-primary') ? '' : 'lordicon-auto'} ${className}`}
       style={{ width: size, height: size, ...style }}
       onMouseEnter={handleMouseEnter}
       onClick={handleClick}

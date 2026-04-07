@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { mockScreening, mockCandidates } from '@/lib/mock-data'
 import MatchScoreRing from '@/components/ui/match-score-ring'
@@ -88,10 +89,17 @@ export default function ScreeningPage() {
       return
     }
 
+    // Dynamic AI follow-up based on message count
+    const aiResponses = [
+      `That's a great point about ${outgoing.split(' ').slice(0, 3).join(' ')}. Can you walk me through how you've handled database migrations in production? Specifically, how do you ensure zero-downtime deployments when schema changes are involved?`,
+      `Interesting approach. Let me drill deeper — when building APIs at scale, how do you handle rate limiting and request throttling? Have you implemented circuit breaker patterns?`,
+      `Thanks for sharing that. Now, this role involves AI/LLM integrations. Have you worked with streaming API responses? How would you architect a system that needs to handle real-time Claude API responses while maintaining conversation state?`,
+      `Good technical depth. Let's talk about team dynamics — describe a situation where you had to push back on a technical decision from a senior engineer. How did you handle it and what was the outcome?`,
+      `That's very relevant experience. Final question: if you had to design the match scoring algorithm for a job marketplace from scratch, what signals would you prioritize and why?`,
+    ]
+    const idx = (messages.length - 2) % aiResponses.length
     setTimeout(() => {
-      simulateStreaming(
-        "That's a great answer! Your experience with distributed systems and real-time data processing is very relevant to this role. Let me ask about your approach to testing — how do you ensure reliability in microservices architectures? Do you use contract testing, integration tests, or a combination?"
-      )
+      simulateStreaming(aiResponses[idx])
     }, 1000)
   }
 
@@ -258,9 +266,13 @@ export default function ScreeningPage() {
       {/* Candidate panel - 30% */}
       <div className="flex-[3] overflow-y-auto bg-surface p-5 space-y-5">
         <div className="text-center py-3">
-          <div className="w-16 h-16 rounded-full bg-primary-light text-primary flex items-center justify-center text-[22px] font-bold mx-auto mb-3">
-            {candidate.avatar}
-          </div>
+          {candidate.avatarUrl ? (
+            <Image src={candidate.avatarUrl} alt={candidate.name} width={64} height={64} className="w-16 h-16 rounded-full object-cover mx-auto mb-3" />
+          ) : (
+            <div className="w-16 h-16 rounded-full bg-primary-light text-primary flex items-center justify-center text-[22px] font-bold mx-auto mb-3">
+              {candidate.avatar}
+            </div>
+          )}
           <h3 className="text-[16px] font-semibold text-foreground">{candidate.name}</h3>
           <p className="text-[12px] text-muted-foreground">{candidate.title}</p>
           <div className="flex justify-center mt-3">

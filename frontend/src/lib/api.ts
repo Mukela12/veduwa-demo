@@ -142,12 +142,35 @@ export function toJob(job: BackendJob): Job {
   }
 }
 
+// Stable avatar URLs keyed by name so they persist across mock/API transitions
+const AVATAR_POOL = [
+  'https://randomuser.me/api/portraits/women/44.jpg',
+  'https://randomuser.me/api/portraits/men/32.jpg',
+  'https://randomuser.me/api/portraits/women/68.jpg',
+  'https://randomuser.me/api/portraits/men/75.jpg',
+  'https://randomuser.me/api/portraits/women/26.jpg',
+  'https://randomuser.me/api/portraits/men/22.jpg',
+  'https://randomuser.me/api/portraits/women/90.jpg',
+  'https://randomuser.me/api/portraits/men/46.jpg',
+  'https://randomuser.me/api/portraits/women/55.jpg',
+  'https://randomuser.me/api/portraits/men/67.jpg',
+  'https://randomuser.me/api/portraits/women/33.jpg',
+  'https://randomuser.me/api/portraits/men/85.jpg',
+]
+
+function stableAvatarUrl(name: string): string {
+  let hash = 0
+  for (let i = 0; i < name.length; i++) hash = ((hash << 5) - hash + name.charCodeAt(i)) | 0
+  return AVATAR_POOL[Math.abs(hash) % AVATAR_POOL.length]
+}
+
 export function toCandidate(candidate: BackendCandidate): Candidate {
   const name = candidate.full_name || 'Candidate'
   return {
     id: candidate.id,
     name,
     avatar: initials(name),
+    avatarUrl: candidate.avatar_url || stableAvatarUrl(name),
     title: candidate.title || 'Software Engineer',
     location: candidate.location || 'Remote',
     skills: candidate.skills || [],
