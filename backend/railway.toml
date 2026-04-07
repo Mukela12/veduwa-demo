@@ -1,0 +1,10 @@
+[build]
+builder = "DOCKERFILE"
+
+[deploy]
+numReplicas = 1
+healthcheckPath = "/health"
+restartPolicyType = "ON_FAILURE"
+
+# Create a second Railway service for the worker with:
+# celery -A app.workers.celery_app worker --loglevel=info
