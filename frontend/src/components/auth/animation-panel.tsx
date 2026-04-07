@@ -21,11 +21,11 @@ export default function AnimationPanel() {
         <RiveComponent />
       </div>
 
-      {/* Overlay content */}
-      <div className="absolute inset-0 flex flex-col justify-between p-8">
-        <VeduwaLogo size="md" className="[&_span]:text-white [&_div]:bg-white/20" />
+      {/* Overlay content - pointer-events-none so clicks pass through to Rive */}
+      <div className="absolute inset-0 flex flex-col justify-between p-8 pointer-events-none">
+        <VeduwaLogo size="md" className="[&_span]:text-white [&_div]:bg-white/20 pointer-events-auto" />
 
-        <div className="max-w-[320px]">
+        <div className="max-w-[320px] pointer-events-auto">
           <h2 className="text-[26px] font-heading font-bold text-white tracking-tight leading-tight" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.5)' }}>
             AI-Powered
             <br />
