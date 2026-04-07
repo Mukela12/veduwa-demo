@@ -28,6 +28,10 @@ export default function SignUpPage() {
     setError('')
     setLoading(true)
 
+    // Fresh onboarding for new signups
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('veduwa-onboarding')
+    }
     const { error, needsConfirmation } = await signUp(email, password, fullName, role)
     if (error) {
       setError(error.message)

@@ -56,6 +56,10 @@ export default function LoginPage() {
     setEmail(account.email)
     setPassword(account.password)
     setLoading(true)
+    // Clear onboarding state so demo users always get the guided tour
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('veduwa-onboarding')
+    }
     const { error } = await signIn(account.email, account.password)
     if (error) {
       setError('Demo account not available yet. Please sign up first.')
