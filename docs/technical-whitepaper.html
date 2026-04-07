@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veduwa Technical Whitepaper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 22mm 24mm 24mm 24mm;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-size: 10pt; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #1a1a2e;
+    line-height: 1.7;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .break { page-break-before: always; }
+  .cover-section { page-break-after: always; }
+  h2, h3, h4 { page-break-after: avoid; }
+  table, .box, .diagram { page-break-inside: avoid; }
+
+  /* Header */
+  .hdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 9px;
+    border-bottom: 1.5px solid #eaedf2;
+  }
+  .hdr-left { display: flex; align-items: center; gap: 9px; }
+  .hdr-logo {
+    height: 22px; width: 22px; border-radius: 5px;
+    background: #3B5BDB; display: flex; align-items: center; justify-content: center;
+  }
+  .hdr-logo svg { width: 12px; height: 12px; }
+  .hdr-left span { font-size: 9pt; font-weight: 600; color: #3d3d5c; }
+  .hdr-right { font-size: 7.5pt; color: #9ca3af; font-weight: 500; letter-spacing: 0.6px; text-transform: uppercase; }
+
+  /* Cover */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 100px 0 60px;
+  }
+  .cover-logo {
+    height: 64px; width: 64px; border-radius: 16px;
+    background: #3B5BDB; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+  }
+  .cover-logo svg { width: 32px; height: 32px; }
+  .cover h1 { font-size: 30pt; font-weight: 700; color: #0f0f23; letter-spacing: -0.8px; margin-bottom: 4px; }
+  .cover .tagline { font-size: 11pt; color: #6b7280; margin-bottom: 48px; }
+  .cover .doc-label {
+    font-size: 10pt; font-weight: 600; color: #1a1a2e;
+    letter-spacing: 2.5px; text-transform: uppercase;
+    border: 2px solid #1a1a2e; padding: 9px 32px; border-radius: 4px;
+  }
+  .cover .meta { margin-top: 48px; font-size: 8.5pt; color: #9ca3af; line-height: 2.2; }
+  .cover .version-badge {
+    display: inline-block; background: #EDF2FF; color: #3B5BDB;
+    font-size: 8pt; font-weight: 600; padding: 3px 10px;
+    border-radius: 10px; margin-bottom: 14px;
+  }
+
+  /* Typography */
+  h2 { font-size: 17pt; font-weight: 700; color: #0f0f23; margin-bottom: 12px; letter-spacing: -0.2px; padding-bottom: 7px; border-bottom: 2px solid #eaedf2; }
+  h3 { font-size: 12pt; font-weight: 600; color: #1a1a2e; margin: 20px 0 8px; }
+  h3:first-child { margin-top: 0; }
+  h4 { font-size: 10pt; font-weight: 600; color: #2d2d4a; margin: 14px 0 4px; }
+  p { margin-bottom: 10px; color: #2d2d4a; }
+  .intro { font-size: 10.5pt; color: #4b5563; line-height: 1.8; margin-bottom: 16px; }
+
+  /* Code */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt; background: #f4f5f7;
+    padding: 1px 5px; border-radius: 3px; color: #2d2d4a;
+  }
+
+  /* Diagram */
+  .diagram {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt; background: #f8f9fb;
+    border: 1px solid #e5e7eb; border-radius: 4px;
+    padding: 14px 16px; line-height: 1.45;
+    white-space: pre; overflow-x: auto; margin: 10px 0;
+  }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 9pt; margin: 8px 0 14px; }
+  th {
+    text-align: left; background: #f8f9fb; color: #4b5563;
+    font-weight: 600; font-size: 8pt; text-transform: uppercase;
+    letter-spacing: 0.4px; padding: 8px 10px; border-bottom: 2px solid #e5e7eb;
+  }
+  td { padding: 7px 10px; border-bottom: 1px solid #f0f2f5; vertical-align: top; }
+  tr:nth-child(even) td { background: #fafbfc; }
+
+  /* Layout */
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* Boxes */
+  .box {
+    border: 1px solid #e5e7eb; border-radius: 4px;
+    padding: 14px 16px; margin: 10px 0; background: #fff;
+  }
+  .box-muted { background: #f8f9fb; }
+  .box-accent { border-left: 3px solid #3B5BDB; }
+  .box h4 { margin-top: 0; }
+  .box p:last-child { margin-bottom: 0; }
+
+  /* Stats */
+  .stats { display: flex; gap: 28px; justify-content: center; margin: 20px 0; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-n { display: block; font-size: 24pt; font-weight: 700; color: #3B5BDB; letter-spacing: -0.5px; }
+  .stat-l { font-size: 7.5pt; color: #6b7280; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 500; }
+
+  /* Lists */
+  ul, ol { margin: 6px 0 10px 18px; }
+  li { margin-bottom: 3px; }
+  li strong { color: #0f0f23; }
+  ul.clean { list-style: none; padding: 0; margin-left: 0; }
+  ul.clean li { padding: 4px 0 4px 16px; position: relative; font-size: 9pt; }
+  ul.clean li::before {
+    content: ''; position: absolute; left: 0; top: 10px;
+    width: 5px; height: 5px; border-radius: 1px; background: #3B5BDB;
+  }
+
+  /* TOC */
+  .toc { list-style: none; padding: 0; margin: 16px 0; }
+  .toc li { padding: 6px 0; border-bottom: 1px solid #f4f5f7; display: flex; justify-content: space-between; font-size: 9.5pt; }
+  .toc li span:first-child { color: #2d2d4a; }
+  .toc li span:last-child { color: #9ca3af; font-family: 'JetBrains Mono', monospace; font-size: 8.5pt; }
+
+  /* Accent color for inline highlights */
+  .accent { color: #3B5BDB; font-weight: 600; }
+  .tag {
+    display: inline-block; background: #EDF2FF; color: #3B5BDB;
+    font-size: 7.5pt; font-weight: 600; padding: 2px 7px;
+    border-radius: 3px; margin-right: 4px;
+  }
+  .tag-green { background: #ECFDF5; color: #059669; }
+  .tag-amber { background: #FFFBEB; color: #D97706; }
+  .tag-red { background: #FEF2F2; color: #DC2626; }
+
+  /* Footer line */
+  .footer-line {
+    margin-top: 40px; padding-top: 10px;
+    border-top: 1px solid #eaedf2;
+    font-size: 7.5pt; color: #9ca3af; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ COVER ═══════════════════════════════════════════ -->
+<section class="cover-section">
+  <div class="cover">
+    <div class="cover-logo">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="8" r="2" fill="white" opacity="0.8"/><circle cx="26" cy="8" r="2" fill="white" opacity="0.8"/><circle cx="16" cy="26" r="2.5" fill="white"/><circle cx="11" cy="17" r="1.2" fill="white" opacity="0.5"/><circle cx="21" cy="17" r="1.2" fill="white" opacity="0.5"/></svg>
+    </div>
+    <span class="version-badge">Demo v1.0</span>
+    <h1>Veduwa</h1>
+    <p class="tagline">AI-Powered IT Job Marketplace</p>
+    <div class="doc-label">Technical Whitepaper</div>
+    <div class="meta">
+      Version 1.0 &mdash; April 2026<br>
+      Author: Mukela Katungu<br>
+      Status: Live Demo<br>
+      Classification: Client-Facing
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ TOC ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Technical Whitepaper</div>
+  </div>
+
+  <h2>Table of Contents</h2>
+  <ul class="toc">
+    <li><span>1. Executive Summary</span><span>3</span></li>
+    <li><span>2. System Architecture</span><span>4</span></li>
+    <li><span>3. Technology Stack</span><span>5</span></li>
+    <li><span>4. Database Schema</span><span>7</span></li>
+    <li><span>5. Backend API Layer</span><span>9</span></li>
+    <li><span>6. AI Pipeline</span><span>11</span></li>
+    <li><span>7. Frontend Architecture</span><span>13</span></li>
+    <li><span>8. Authentication &amp; Authorization</span><span>15</span></li>
+    <li><span>9. Design System</span><span>16</span></li>
+    <li><span>10. Infrastructure &amp; Deployment</span><span>17</span></li>
+    <li><span>11. Seed Data &amp; Demo Credentials</span><span>18</span></li>
+    <li><span>12. Performance &amp; Security</span><span>19</span></li>
+  </ul>
+</section>
+
+<!-- ═══════════════════════════════════════════ 1. EXECUTIVE SUMMARY ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Executive Summary</div>
+  </div>
+
+  <h2>1. Executive Summary</h2>
+
+  <p class="intro">
+    <strong>Veduwa</strong> is an AI-powered IT job marketplace that automates the hiring pipeline from job posting to candidate screening. The platform uses vector embeddings for semantic matching, Claude AI for real-time candidate screening via streaming chat, and a modern full-stack architecture built for production scale.
+  </p>
+
+  <div class="stats">
+    <div class="stat"><span class="stat-n">12</span><span class="stat-l">Frontend Routes</span></div>
+    <div class="stat"><span class="stat-n">15</span><span class="stat-l">API Endpoints</span></div>
+    <div class="stat"><span class="stat-n">5</span><span class="stat-l">Database Tables</span></div>
+    <div class="stat"><span class="stat-n">5</span><span class="stat-l">AI Services</span></div>
+  </div>
+
+  <h3>Live Deployment</h3>
+  <table>
+    <tr><th>Service</th><th>URL</th><th>Status</th></tr>
+    <tr><td>Frontend</td><td><code>frontend-vert-tau-84.vercel.app</code></td><td><span class="tag-green tag">Live</span></td></tr>
+    <tr><td>Backend API</td><td><code>veduwa-api.onrender.com</code></td><td><span class="tag-green tag">Live</span></td></tr>
+    <tr><td>Health Check</td><td><code>veduwa-api.onrender.com/health</code></td><td><span class="tag-green tag">OK</span></td></tr>
+    <tr><td>Source Code</td><td><code>github.com/Mukela12/veduwa-demo</code></td><td><span class="tag">Public</span></td></tr>
+  </table>
+
+  <div class="box box-accent">
+    <h4>Core Value Proposition</h4>
+    <p>Employers post jobs &rarr; AI automatically extracts skills and requirements &rarr; Candidates are matched and ranked using vector similarity &rarr; Claude AI conducts structured pre-screening interviews &rarr; Employers receive plain-English hiring recommendations.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ 2. SYSTEM ARCHITECTURE ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">System Architecture</div>
+  </div>
+
+  <h2>2. System Architecture</h2>
+
+  <p class="intro">Veduwa follows a decoupled architecture with a Next.js frontend deployed on Vercel's edge network, a FastAPI backend on Render, and Supabase providing both PostgreSQL and authentication services.</p>
+
+  <div class="diagram">
+                    ┌──────────────────┐
+                    │   Vercel (Edge)   │
+                    │   Next.js 14 SSR  │
+                    └────────┬─────────┘
+                             │ HTTPS / REST
+                             ▼
+┌──────────────┐    ┌──────────────────┐    ┌──────────────────┐
+│   Supabase   │◄──►│   Render.com     │◄──►│   Claude AI      │
+│   Auth (JWT) │    │   FastAPI 0.115  │    │   (Anthropic)    │
+│   PostgreSQL │    │   Uvicorn ASGI   │    │   Haiku + Sonnet │
+└──────────────┘    └────────┬─────────┘    └──────────────────┘
+       ▲                     │ asyncpg
+       │                     ▼
+       │            ┌──────────────────┐
+       └────────────│   PostgreSQL     │
+                    │   + pgvector     │
+                    │   5 tables       │
+                    └──────────────────┘</div>
+
+  <h3>Communication Patterns</h3>
+  <table>
+    <tr><th>Flow</th><th>Protocol</th><th>Auth</th></tr>
+    <tr><td>Client &rarr; Vercel</td><td>HTTPS (SSR + CSR)</td><td>None</td></tr>
+    <tr><td>Client &rarr; Supabase</td><td>HTTPS (REST)</td><td>Anon key</td></tr>
+    <tr><td>Client &rarr; FastAPI</td><td>HTTPS (REST + SSE)</td><td>Bearer JWT</td></tr>
+    <tr><td>FastAPI &rarr; Supabase</td><td>HTTPS (Auth API)</td><td>Service key</td></tr>
+    <tr><td>FastAPI &rarr; PostgreSQL</td><td>asyncpg (TCP)</td><td>Connection string</td></tr>
+    <tr><td>FastAPI &rarr; Claude</td><td>HTTPS (Streaming)</td><td>API key</td></tr>
+  </table>
+
+  <h3>Port Configuration</h3>
+  <table>
+    <tr><th>Service</th><th>Port</th><th>Environment</th></tr>
+    <tr><td>Next.js Dev</td><td>3099</td><td>Local</td></tr>
+    <tr><td>FastAPI Dev</td><td>8000</td><td>Local</td></tr>
+    <tr><td>PostgreSQL</td><td>5432</td><td>Supabase Cloud</td></tr>
+    <tr><td>Redis</td><td>6379</td><td>Railway (optional)</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════ 3. TECHNOLOGY STACK ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Technology Stack</div>
+  </div>
+
+  <h2>3. Technology Stack</h2>
+
+  <h3>Backend</h3>
+  <table>
+    <tr><th>Category</th><th>Technology</th><th>Version</th><th>Purpose</th></tr>
+    <tr><td>Framework</td><td>FastAPI</td><td>0.115.0</td><td>Async REST API</td></tr>
+    <tr><td>ORM</td><td>SQLAlchemy</td><td>2.0.36</td><td>Async database ops</td></tr>
+    <tr><td>Migrations</td><td>Alembic</td><td>1.14.0</td><td>Schema versioning</td></tr>
+    <tr><td>Validation</td><td>Pydantic</td><td>2.10.0</td><td>Request/response schemas</td></tr>
+    <tr><td>Auth</td><td>python-jose</td><td>3.3.0</td><td>JWT decoding</td></tr>
+    <tr><td>AI</td><td>Anthropic SDK</td><td>0.42.0</td><td>Claude API integration</td></tr>
+    <tr><td>Task Queue</td><td>Celery</td><td>5.4.0</td><td>Background processing</td></tr>
+    <tr><td>Cache/Broker</td><td>Redis</td><td>5.2.0</td><td>Celery broker</td></tr>
+    <tr><td>Server</td><td>Uvicorn</td><td>0.34.0</td><td>ASGI server</td></tr>
+    <tr><td>File Storage</td><td>Cloudinary</td><td>1.41.0</td><td>Resume uploads</td></tr>
+    <tr><td>Email</td><td>Resend</td><td>2.0.0</td><td>Transactional email</td></tr>
+  </table>
+
+  <h3>Frontend</h3>
+  <table>
+    <tr><th>Category</th><th>Technology</th><th>Version</th><th>Purpose</th></tr>
+    <tr><td>Framework</td><td>Next.js</td><td>14.2.35</td><td>React meta-framework</td></tr>
+    <tr><td>Language</td><td>TypeScript</td><td>5.x</td><td>Type safety</td></tr>
+    <tr><td>Styling</td><td>Tailwind CSS</td><td>4.x</td><td>Utility-first CSS</td></tr>
+    <tr><td>Animation</td><td>Framer Motion</td><td>12.38.0</td><td>Page transitions, gestures</td></tr>
+    <tr><td>Icons</td><td>Lottie React</td><td>2.4.1</td><td>25 animated LordIcons</td></tr>
+    <tr><td>Login</td><td>Rive Canvas</td><td>latest</td><td>Interactive Rive animation</td></tr>
+    <tr><td>Charts</td><td>Recharts</td><td>3.8.1</td><td>Dashboard visualizations</td></tr>
+    <tr><td>Auth</td><td>Supabase SSR</td><td>0.10.0</td><td>Auth state management</td></tr>
+    <tr><td>Theme</td><td>next-themes</td><td>0.4.6</td><td>Dark/light mode toggle</td></tr>
+    <tr><td>UI Primitives</td><td>Radix UI</td><td>various</td><td>Accessible components</td></tr>
+  </table>
+
+  <h3>Infrastructure</h3>
+  <table>
+    <tr><th>Service</th><th>Provider</th><th>Region</th><th>Plan</th></tr>
+    <tr><td>Database + Auth</td><td>Supabase</td><td>US East (Virginia)</td><td>Free</td></tr>
+    <tr><td>Backend Hosting</td><td>Render.com</td><td>Ohio</td><td>Free</td></tr>
+    <tr><td>Frontend Hosting</td><td>Vercel</td><td>Edge (global)</td><td>Hobby</td></tr>
+    <tr><td>AI Provider</td><td>Anthropic</td><td>US</td><td>Pay-per-use</td></tr>
+    <tr><td>Redis (optional)</td><td>Railway</td><td>US East</td><td>Free</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════ 4. DATABASE SCHEMA ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Database Schema</div>
+  </div>
+
+  <h2>4. Database Schema</h2>
+  <p class="intro">PostgreSQL with pgvector extension for semantic vector similarity search. 5 tables managed via Alembic migrations.</p>
+
+  <h3>Entity Relationship</h3>
+  <div class="diagram">users ──┬── jobs (employer_id FK)
+        │
+        └── candidates (user_id FK, unique)
+                │
+                └── applications (candidate_id, job_id)  UNIQUE(job_id, candidate_id)
+                        │
+                        └── screenings (application_id FK)</div>
+
+  <h3>Table: users</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+    <tr><td><code>id</code></td><td>UUID</td><td>PK, default gen_random_uuid()</td></tr>
+    <tr><td><code>email</code></td><td>VARCHAR(255)</td><td>UNIQUE, NOT NULL, INDEXED</td></tr>
+    <tr><td><code>full_name</code></td><td>VARCHAR(255)</td><td>NOT NULL</td></tr>
+    <tr><td><code>role</code></td><td>VARCHAR(20)</td><td>CHECK IN ('employer', 'candidate')</td></tr>
+    <tr><td><code>avatar_url</code></td><td>VARCHAR</td><td>NULLABLE</td></tr>
+    <tr><td><code>company_name</code></td><td>VARCHAR(255)</td><td>NULLABLE</td></tr>
+    <tr><td><code>created_at</code></td><td>TIMESTAMPTZ</td><td>DEFAULT NOW()</td></tr>
+    <tr><td><code>updated_at</code></td><td>TIMESTAMPTZ</td><td>DEFAULT NOW()</td></tr>
+  </table>
+
+  <h3>Table: jobs</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+    <tr><td><code>id</code></td><td>UUID</td><td>PK</td></tr>
+    <tr><td><code>employer_id</code></td><td>UUID</td><td>FK &rarr; users.id, INDEXED</td></tr>
+    <tr><td><code>title</code></td><td>VARCHAR(255)</td><td>NOT NULL, INDEXED</td></tr>
+    <tr><td><code>company</code></td><td>VARCHAR(255)</td><td>NOT NULL, INDEXED</td></tr>
+    <tr><td><code>description</code></td><td>TEXT</td><td>NOT NULL</td></tr>
+    <tr><td><code>location</code></td><td>VARCHAR(255)</td><td>NULLABLE</td></tr>
+    <tr><td><code>job_type</code></td><td>VARCHAR(20)</td><td>CHECK ('full_time','contract','remote')</td></tr>
+    <tr><td><code>salary_min / max</code></td><td>INTEGER</td><td>NULLABLE</td></tr>
+    <tr><td><code>seniority</code></td><td>VARCHAR(20)</td><td>CHECK ('junior','mid','senior','lead')</td></tr>
+    <tr><td><code>skills</code></td><td>JSONB</td><td>DEFAULT '[]'</td></tr>
+    <tr><td><code>parsed_data</code></td><td>JSONB</td><td>NULLABLE (AI-generated)</td></tr>
+    <tr><td><code>embedding</code></td><td>VECTOR(384)</td><td>NULLABLE (semantic vector)</td></tr>
+    <tr><td><code>status</code></td><td>VARCHAR(20)</td><td>DEFAULT 'active', INDEXED</td></tr>
+  </table>
+
+  <h3>Table: candidates</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+    <tr><td><code>id</code></td><td>UUID</td><td>PK</td></tr>
+    <tr><td><code>user_id</code></td><td>UUID</td><td>FK &rarr; users.id, UNIQUE</td></tr>
+    <tr><td><code>resume_url</code></td><td>VARCHAR</td><td>NULLABLE</td></tr>
+    <tr><td><code>parsed_resume</code></td><td>JSONB</td><td>NULLABLE (AI-generated)</td></tr>
+    <tr><td><code>skills</code></td><td>JSONB</td><td>DEFAULT '[]'</td></tr>
+    <tr><td><code>experience_years</code></td><td>INTEGER</td><td>NULLABLE</td></tr>
+    <tr><td><code>embedding</code></td><td>VECTOR(384)</td><td>NULLABLE</td></tr>
+  </table>
+
+  <h3>Table: applications</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+    <tr><td><code>id</code></td><td>UUID</td><td>PK</td></tr>
+    <tr><td><code>job_id</code></td><td>UUID</td><td>FK &rarr; jobs.id</td></tr>
+    <tr><td><code>candidate_id</code></td><td>UUID</td><td>FK &rarr; candidates.id</td></tr>
+    <tr><td><code>match_score</code></td><td>FLOAT</td><td>NULLABLE (0-100)</td></tr>
+    <tr><td><code>skills_overlap</code></td><td>JSONB</td><td>NULLABLE</td></tr>
+    <tr><td><code>status</code></td><td>VARCHAR(20)</td><td>DEFAULT 'pending'</td></tr>
+  </table>
+  <p style="font-size:8.5pt;color:#6b7280;">Unique constraint: (job_id, candidate_id)</p>
+
+  <h3>Table: screenings</h3>
+  <table>
+    <tr><th>Column</th><th>Type</th><th>Constraints</th></tr>
+    <tr><td><code>id</code></td><td>UUID</td><td>PK</td></tr>
+    <tr><td><code>application_id</code></td><td>UUID</td><td>FK &rarr; applications.id</td></tr>
+    <tr><td><code>messages</code></td><td>JSONB</td><td>DEFAULT '[]'</td></tr>
+    <tr><td><code>summary</code></td><td>TEXT</td><td>NULLABLE</td></tr>
+    <tr><td><code>outcome</code></td><td>VARCHAR(20)</td><td>DEFAULT 'pending' (pass/fail/pending)</td></tr>
+    <tr><td><code>started_at</code></td><td>TIMESTAMPTZ</td><td>DEFAULT NOW()</td></tr>
+    <tr><td><code>completed_at</code></td><td>TIMESTAMPTZ</td><td>NULLABLE</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════ 5. BACKEND API ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Backend API Layer</div>
+  </div>
+
+  <h2>5. Backend API Layer</h2>
+
+  <h3>Route Modules</h3>
+  <table>
+    <tr><th>Module</th><th>Prefix</th><th>Endpoints</th><th>Auth</th></tr>
+    <tr><td>auth</td><td><code>/api/auth</code></td><td>1</td><td>Public</td></tr>
+    <tr><td>jobs</td><td><code>/api/jobs</code></td><td>5</td><td>Mixed</td></tr>
+    <tr><td>candidates</td><td><code>/api/candidates</code></td><td>3</td><td>Required</td></tr>
+    <tr><td>applications</td><td><code>/api/applications</code></td><td>3</td><td>Required</td></tr>
+    <tr><td>screening</td><td><code>/api/screening</code></td><td>4</td><td>Required</td></tr>
+    <tr><td>dashboard</td><td><code>/api/dashboard</code></td><td>2</td><td>Employer only</td></tr>
+  </table>
+
+  <h3>Complete Endpoint Specification</h3>
+  <table>
+    <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
+    <tr><td><span class="tag-green tag">GET</span></td><td><code>/health</code></td><td>&mdash;</td><td>Health check</td></tr>
+    <tr><td><span class="tag tag-amber">POST</span></td><td><code>/api/auth/verify</code></td><td>&mdash;</td><td>Verify Supabase JWT</td></tr>
+    <tr><td><span class="tag-green tag">GET</span></td><td><code>/api/jobs</code></td><td>&mdash;</td><td>List jobs (paginated, filtered)</td></tr>
+    <tr><td><span class="tag tag-amber">POST</span></td><td><code>/api/jobs</code></td><td>Employer</td><td>Create job + AI parse</td></tr>
+    <tr><td><span class="tag-green tag">GET</span></td><td><code>/api/jobs/{id}</code></td><td>&mdash;</td><td>Job detail</td></tr>
+    <tr><td><span class="tag tag">PATCH</span></td><td><code>/api/jobs/{id}</code></td><td>Owner</td><td>Update job</td></tr>
+    <tr><td><span class="tag tag-red">DEL</span></td><td><code>/api/jobs/{id}</code></td><td>Owner</td><td>Soft-delete (close)</td></tr>
+    <tr><td><span class="tag-green tag">GET</span></td><td><code>/api/candidates</code></td><td>Auth</td><td>List candidates</td></tr>
+    <tr><td><span class="tag-green tag">GET</span></td><td><code>/api/candidates/{id}</code></td><td>Auth</td><td>Candidate profile</td></tr>
+    <tr><td><span class="tag tag-amber">POST</span></td><td><code>/api/candidates/{id}/resume</code></td><td>Owner</td><td>Upload + AI parse</td></tr>
+    <tr><td><span class="tag tag-amber">POST</span></td><td><code>/api/applications</code></td><td>Candidate</td><td>Apply to job</td></tr>
+    <tr><td><span class="tag-green tag">GET</span></td><td><code>/api/applications/{id}/matches</code></td><td>Auth</td><td>Match results</td></tr>
+    <tr><td><span class="tag tag">PATCH</span></td><td><code>/api/applications/{id}/status</code></td><td>Employer</td><td>Update status</td></tr>
+    <tr><td><span class="tag tag-amber">POST</span></td><td><code>/api/screening/{id}/start</code></td><td>Employer</td><td>Start AI screening</td></tr>
+    <tr><td><span class="tag-green tag">GET</span></td><td><code>/api/screening/{id}/stream</code></td><td>Auth</td><td>SSE streaming chat</td></tr>
+    <tr><td><span class="tag tag-amber">POST</span></td><td><code>/api/screening/{id}/message</code></td><td>Auth</td><td>Send message</td></tr>
+    <tr><td><span class="tag tag-amber">POST</span></td><td><code>/api/screening/{id}/summarize</code></td><td>Employer</td><td>Generate summary</td></tr>
+    <tr><td><span class="tag-green tag">GET</span></td><td><code>/api/dashboard/stats</code></td><td>Employer</td><td>KPI metrics</td></tr>
+    <tr><td><span class="tag-green tag">GET</span></td><td><code>/api/dashboard/pipeline</code></td><td>Employer</td><td>Candidate funnel</td></tr>
+  </table>
+
+  <h3>Pagination Response Format</h3>
+  <div class="diagram">{
+  "data": [ ... ],
+  "pagination": {
+    "page": 1,
+    "per_page": 20,
+    "total": 156,
+    "total_pages": 8
+  }
+}</div>
+</section>
+
+<!-- ═══════════════════════════════════════════ 6. AI PIPELINE ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">AI Pipeline</div>
+  </div>
+
+  <h2>6. AI Pipeline</h2>
+  <p class="intro">All AI operations use the Anthropic Claude API exclusively. No OpenAI dependency. The pipeline processes jobs and candidates through 5 stages.</p>
+
+  <div class="diagram">Job Description ──► JD Parser (Haiku) ──► Structured JSON
+                                                │
+Resume PDF ────────► Resume Parser (Haiku) ────►│
+                                                ▼
+                                       Embedding Generator
+                                       (384-dim vectors)
+                                                │
+                                                ▼
+                                        Match Scorer
+                                     (cosine + skills)
+                                                │
+                                                ▼
+                                      AI Screening Chat
+                                     (Sonnet streaming)
+                                                │
+                                                ▼
+                                     Summary Generator
+                                        (Sonnet)</div>
+
+  <h3>AI Services</h3>
+  <table>
+    <tr><th>Service</th><th>Model</th><th>Purpose</th><th>Output</th></tr>
+    <tr><td>JD Parser</td><td><code>claude-haiku-4-5</code></td><td>Extract skills, seniority, domain</td><td>JSON</td></tr>
+    <tr><td>Resume Parser</td><td><code>claude-haiku-4-5</code></td><td>Extract skills, experience, education</td><td>JSON</td></tr>
+    <tr><td>Embeddings</td><td>Hash-based (384d)</td><td>Semantic vector generation</td><td>float[384]</td></tr>
+    <tr><td>Match Scorer</td><td>NumPy</td><td>Cosine similarity + skills overlap</td><td>0&ndash;100 score</td></tr>
+    <tr><td>Screening Chat</td><td><code>claude-sonnet-4</code></td><td>Real-time interview</td><td>SSE stream</td></tr>
+    <tr><td>Summarizer</td><td><code>claude-sonnet-4</code></td><td>Employer assessment</td><td>Text</td></tr>
+  </table>
+
+  <h3>Match Score Formula</h3>
+  <div class="box box-accent">
+    <p><strong>match_score = (cosine_similarity &times; 0.4 + skills_overlap_ratio &times; 0.6) &times; 100</strong></p>
+    <ul class="clean">
+      <li><strong>Cosine similarity (40%)</strong> &mdash; Semantic similarity between job and candidate embedding vectors</li>
+      <li><strong>Skills overlap (60%)</strong> &mdash; Ratio of matched skills to required skills, case-insensitive</li>
+    </ul>
+  </div>
+
+  <h3>Celery Background Tasks</h3>
+  <table>
+    <tr><th>Task</th><th>Trigger</th><th>Processing</th></tr>
+    <tr><td><code>parse_job_description</code></td><td>Job creation</td><td>Claude Haiku &rarr; structured JSON</td></tr>
+    <tr><td><code>parse_resume</code></td><td>Resume upload</td><td>Claude Haiku &rarr; skills extraction</td></tr>
+    <tr><td><code>compute_embeddings</code></td><td>After parsing</td><td>384-dim vector generation</td></tr>
+    <tr><td><code>compute_match_scores</code></td><td>After embeddings</td><td>Batch cosine + overlap scoring</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════ 7. FRONTEND ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Frontend Architecture</div>
+  </div>
+
+  <h2>7. Frontend Architecture</h2>
+
+  <h3>Route Map</h3>
+  <table>
+    <tr><th>Route</th><th>Page</th><th>Auth</th><th>Description</th></tr>
+    <tr><td><code>/</code></td><td>Landing</td><td>&mdash;</td><td>Marketing hero, stats, features</td></tr>
+    <tr><td><code>/auth/login</code></td><td>Login</td><td>&mdash;</td><td>Rive animation + demo cards + OAuth</td></tr>
+    <tr><td><code>/auth/signup</code></td><td>Signup</td><td>&mdash;</td><td>Role selection + registration</td></tr>
+    <tr><td><code>/dashboard</code></td><td>Dashboard</td><td>Employer</td><td>Stats + pipeline chart + table</td></tr>
+    <tr><td><code>/jobs</code></td><td>Job Board</td><td>&mdash;</td><td>Filter + search + cards</td></tr>
+    <tr><td><code>/jobs/[id]</code></td><td>Job Detail</td><td>&mdash;</td><td>Full job view</td></tr>
+    <tr><td><code>/dashboard/post</code></td><td>Post Job</td><td>Employer</td><td>4-step form wizard</td></tr>
+    <tr><td><code>/screening</code></td><td>AI Screening</td><td>Employer</td><td>70/30 split chat + profile</td></tr>
+    <tr><td><code>/candidates</code></td><td>Candidates</td><td>Auth</td><td>Grid + status filters</td></tr>
+    <tr><td><code>/candidates/[id]</code></td><td>Profile</td><td>Auth</td><td>Tabs + timeline + documents</td></tr>
+  </table>
+
+  <h3>Key UI Components</h3>
+  <table>
+    <tr><th>Component</th><th>Purpose</th><th>Animation</th></tr>
+    <tr><td>LordIcon (25 icons)</td><td>Micro-interaction icons</td><td>Lottie hover/click/loop</td></tr>
+    <tr><td>MatchScoreRing</td><td>SVG donut 0&ndash;100</td><td>CSS stroke-dashoffset 1s</td></tr>
+    <tr><td>Dock</td><td>Mobile navigation</td><td>Framer Motion spring physics</td></tr>
+    <tr><td>ThemeToggle</td><td>Sun/moon dark mode</td><td>CSS cubic-bezier 0.5s</td></tr>
+    <tr><td>AnimationPanel</td><td>Rive login illustration</td><td>Rive state machine</td></tr>
+    <tr><td>StatCard</td><td>KPI with delta trend</td><td>None (data-focused)</td></tr>
+    <tr><td>JobCard</td><td>Rich job listing</td><td>Transform translateY</td></tr>
+    <tr><td>CandidateCard</td><td>Photo + skills + score</td><td>Hover elevation</td></tr>
+  </table>
+
+  <h3>Data Flow Pattern</h3>
+  <div class="box box-muted">
+    <p>Every page follows a <strong>graceful degradation pattern</strong>: fetch from the live API on mount, fall back to mock data if the API is unreachable. Pages display a <code>(demo data)</code> label when using mock fallback. This ensures the demo always renders beautifully regardless of backend state.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ 8. AUTH ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Authentication &amp; Authorization</div>
+  </div>
+
+  <h2>8. Authentication &amp; Authorization</h2>
+
+  <h3>Auth Flow</h3>
+  <div class="diagram">1. User signs in via Supabase Auth (email/password or Google OAuth)
+2. Supabase returns JWT access token
+3. Frontend stores token in Supabase session (httpOnly cookie)
+4. API requests include: Authorization: Bearer &lt;token&gt;
+5. Backend verifies token via Supabase Auth API
+6. User record auto-created in DB on first login
+7. Role extracted from user_metadata.role ('employer' | 'candidate')</div>
+
+  <h3>Role-Based Access Control</h3>
+  <table>
+    <tr><th>Resource</th><th>Employer</th><th>Candidate</th><th>Public</th></tr>
+    <tr><td>View jobs</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+    <tr><td>Post jobs</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td>View candidates</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td>Apply to jobs</td><td>&mdash;</td><td>&#10003;</td><td>&mdash;</td></tr>
+    <tr><td>Start screening</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td>View dashboard</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td></tr>
+    <tr><td>Upload resume</td><td>&mdash;</td><td>&#10003;</td><td>&mdash;</td></tr>
+    <tr><td>Generate summary</td><td>&#10003;</td><td>&mdash;</td><td>&mdash;</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════ 9. DESIGN SYSTEM ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Design System</div>
+  </div>
+
+  <h2>9. Design System &mdash; Clarity Theme</h2>
+  <p class="intro">Inspired by Linear.app. Clean, minimal, Swiss typography, maximum data-ink ratio. Full dark mode support.</p>
+
+  <div class="g2">
+    <div>
+      <h3>Light Mode Palette</h3>
+      <table>
+        <tr><th>Token</th><th>Value</th><th>Usage</th></tr>
+        <tr><td>background</td><td><code>#FAFAF8</code></td><td>Page bg</td></tr>
+        <tr><td>foreground</td><td><code>#1C1C1A</code></td><td>Text</td></tr>
+        <tr><td>primary</td><td><code>#3B5BDB</code></td><td>Buttons, links</td></tr>
+        <tr><td>surface</td><td><code>#FFFFFF</code></td><td>Cards</td></tr>
+        <tr><td>border</td><td><code>#E6E4DF</code></td><td>Borders</td></tr>
+        <tr><td>success</td><td><code>#40C057</code></td><td>Positive</td></tr>
+        <tr><td>warning</td><td><code>#FAB005</code></td><td>Caution</td></tr>
+        <tr><td>error</td><td><code>#FA5252</code></td><td>Errors</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>Dark Mode Palette</h3>
+      <table>
+        <tr><th>Token</th><th>Value</th><th>Usage</th></tr>
+        <tr><td>background</td><td><code>#0C0C0E</code></td><td>Page bg</td></tr>
+        <tr><td>foreground</td><td><code>#EDEDEB</code></td><td>Text</td></tr>
+        <tr><td>primary</td><td><code>#4C6EF5</code></td><td>Buttons, links</td></tr>
+        <tr><td>surface</td><td><code>#161618</code></td><td>Cards</td></tr>
+        <tr><td>border</td><td><code>#2A2A2E</code></td><td>Borders</td></tr>
+        <tr><td>success</td><td><code>#4ADE80</code></td><td>Positive</td></tr>
+        <tr><td>warning</td><td><code>#FBBF24</code></td><td>Caution</td></tr>
+        <tr><td>error</td><td><code>#F87171</code></td><td>Errors</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3>Typography</h3>
+  <table>
+    <tr><th>Font</th><th>Weight</th><th>Usage</th></tr>
+    <tr><td>Satoshi (fontshare)</td><td>600&ndash;700</td><td>Headings, branding</td></tr>
+    <tr><td>Inter (Google Fonts)</td><td>400&ndash;500</td><td>Body text, labels</td></tr>
+    <tr><td>JetBrains Mono</td><td>400</td><td>Data, scores, code</td></tr>
+  </table>
+
+  <h3>Responsive Strategy</h3>
+  <div class="g2">
+    <div class="box">
+      <h4>Desktop (768px+)</h4>
+      <ul class="clean">
+        <li>Fixed sidebar navigation (240px)</li>
+        <li>Full header with search + Cmd+K</li>
+        <li>Theme toggle in sidebar footer</li>
+        <li>Multi-column layouts</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Mobile (&lt;768px)</h4>
+      <ul class="clean">
+        <li>macOS-style Dock (Framer Motion spring)</li>
+        <li>No sidebar &mdash; dock replaces nav</li>
+        <li>Compact header with logo + search icon</li>
+        <li>Single-column stacked layouts</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ 10. INFRASTRUCTURE ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Infrastructure</div>
+  </div>
+
+  <h2>10. Infrastructure &amp; Deployment</h2>
+
+  <div class="g3">
+    <div class="box">
+      <h4>Vercel (Frontend)</h4>
+      <ul class="clean">
+        <li>Framework: Next.js</li>
+        <li>Build: <code>npm run build</code></li>
+        <li>Region: Edge (global)</li>
+        <li>Auto-deploy: GitHub push</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Render (Backend)</h4>
+      <ul class="clean">
+        <li>Runtime: Docker</li>
+        <li>Base: Python 3.12-slim</li>
+        <li>Region: Ohio</li>
+        <li>Health: <code>/health</code></li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Supabase (Data)</h4>
+      <ul class="clean">
+        <li>PostgreSQL + pgvector</li>
+        <li>Auth (email + OAuth)</li>
+        <li>Region: US East</li>
+        <li>Connection pooler</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Environment Variables</h3>
+  <div class="g2">
+    <div>
+      <h4>Frontend (Vercel)</h4>
+      <table>
+        <tr><th>Variable</th><th>Purpose</th></tr>
+        <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>Supabase project URL</td></tr>
+        <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td>Supabase anon key</td></tr>
+        <tr><td><code>NEXT_PUBLIC_API_URL</code></td><td>Backend API URL</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4>Backend (Render)</h4>
+      <table>
+        <tr><th>Variable</th><th>Purpose</th></tr>
+        <tr><td><code>DATABASE_URL</code></td><td>Postgres connection</td></tr>
+        <tr><td><code>SUPABASE_URL</code></td><td>Auth verification</td></tr>
+        <tr><td><code>ANTHROPIC_API_KEY</code></td><td>Claude AI access</td></tr>
+        <tr><td><code>CORS_ORIGINS</code></td><td>Allowed origins</td></tr>
+        <tr><td><code>DEMO_AUTH</code></td><td>Demo mode toggle</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ 11. SEED DATA ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Demo Data</div>
+  </div>
+
+  <h2>11. Seed Data &amp; Demo Credentials</h2>
+
+  <div class="box box-accent">
+    <h4>Demo Login</h4>
+    <p><strong>Email:</strong> <code>demo@veduwa.com</code> &nbsp;&nbsp; <strong>Password:</strong> <code>demo123</code> &nbsp;&nbsp; <strong>Role:</strong> Employer</p>
+  </div>
+
+  <h3>Seeded Data Summary</h3>
+  <div class="stats">
+    <div class="stat"><span class="stat-n">10</span><span class="stat-l">Users</span></div>
+    <div class="stat"><span class="stat-n">6</span><span class="stat-l">Jobs</span></div>
+    <div class="stat"><span class="stat-n">8</span><span class="stat-l">Candidates</span></div>
+    <div class="stat"><span class="stat-n">15</span><span class="stat-l">Applications</span></div>
+    <div class="stat"><span class="stat-n">1</span><span class="stat-l">Screening</span></div>
+  </div>
+
+  <h3>Sample Jobs</h3>
+  <table>
+    <tr><th>Title</th><th>Company</th><th>Salary</th><th>Top Skills</th></tr>
+    <tr><td>Senior Full-Stack Engineer</td><td>TechFlow AI</td><td>$150&ndash;200K</td><td><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">TypeScript</span></td></tr>
+    <tr><td>ML Engineer &mdash; NLP Focus</td><td>DataMind Labs</td><td>$140&ndash;180K</td><td><span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">Transformers</span></td></tr>
+    <tr><td>Frontend Developer</td><td>Nexus Design</td><td>$120&ndash;160K</td><td><span class="tag">React</span><span class="tag">Tailwind</span><span class="tag">Next.js</span></td></tr>
+    <tr><td>DevOps Engineer</td><td>CloudScale Inc</td><td>$130&ndash;170K</td><td><span class="tag">Kubernetes</span><span class="tag">Terraform</span><span class="tag">AWS</span></td></tr>
+    <tr><td>Backend Engineer &mdash; Python</td><td>FinAI Solutions</td><td>$100&ndash;140K</td><td><span class="tag">FastAPI</span><span class="tag">PostgreSQL</span><span class="tag">Redis</span></td></tr>
+    <tr><td>AI Research Intern</td><td>DeepLogic AI</td><td>$60&ndash;80K</td><td><span class="tag">TensorFlow</span><span class="tag">NLP</span><span class="tag">Python</span></td></tr>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════ 12. SECURITY ═══════════════════════════════════════════ -->
+<section class="break">
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="hdr-logo"><svg viewBox="0 0 32 32" fill="none"><path d="M6 8L16 26L26 8" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span>Veduwa</span>
+    </div>
+    <div class="hdr-right">Performance &amp; Security</div>
+  </div>
+
+  <h2>12. Performance &amp; Security</h2>
+
+  <div class="g2">
+    <div>
+      <h3>Security Measures</h3>
+      <ul class="clean">
+        <li>JWT-based auth via Supabase</li>
+        <li>Role-based access control (RBAC)</li>
+        <li>CORS whitelist configuration</li>
+        <li>No secrets in client-side code</li>
+        <li>Environment variables for credentials</li>
+        <li>SQL injection prevention (SQLAlchemy ORM)</li>
+        <li>Input validation (Pydantic v2)</li>
+        <li>HTTPS enforced on all endpoints</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Performance Features</h3>
+      <ul class="clean">
+        <li>Async database operations (asyncpg)</li>
+        <li>Connection pooling (Supabase pooler)</li>
+        <li>Static page generation (Next.js SSG)</li>
+        <li>Lazy-loaded API data with fallback</li>
+        <li>GPU-accelerated animations (Framer)</li>
+        <li>Image optimization (next/image)</li>
+        <li>Code splitting per route</li>
+        <li>Edge deployment (Vercel CDN)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-line">
+    <p>Veduwa Technical Whitepaper &mdash; v1.0 &mdash; April 2026 &mdash; Mukela Katungu</p>
+    <p style="margin-top:4px;">For questions or a walkthrough, contact via Upwork or GitHub.</p>
+  </div>
+</section>
+
+</body>
+</html>
